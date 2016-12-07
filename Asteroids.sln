@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Asteroids", "Asteroids\Asteroids.vcxproj", "{D9E73C96-E370-4283-9485-0DE9A0AC32DA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL_Config", "src\SDL_Config\SDL_Config.vcxproj", "{9BC98858-1B67-4848-A4D8-0C257FD35ED9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{D9E73C96-E370-4283-9485-0DE9A0AC32DA}.Release|x64.Build.0 = Release|x64
 		{D9E73C96-E370-4283-9485-0DE9A0AC32DA}.Release|x86.ActiveCfg = Release|Win32
 		{D9E73C96-E370-4283-9485-0DE9A0AC32DA}.Release|x86.Build.0 = Release|Win32
+		{9BC98858-1B67-4848-A4D8-0C257FD35ED9}.Debug|x64.ActiveCfg = Debug|x64
+		{9BC98858-1B67-4848-A4D8-0C257FD35ED9}.Debug|x64.Build.0 = Debug|x64
+		{9BC98858-1B67-4848-A4D8-0C257FD35ED9}.Debug|x86.ActiveCfg = Debug|Win32
+		{9BC98858-1B67-4848-A4D8-0C257FD35ED9}.Debug|x86.Build.0 = Debug|Win32
+		{9BC98858-1B67-4848-A4D8-0C257FD35ED9}.Release|x64.ActiveCfg = Release|x64
+		{9BC98858-1B67-4848-A4D8-0C257FD35ED9}.Release|x64.Build.0 = Release|x64
+		{9BC98858-1B67-4848-A4D8-0C257FD35ED9}.Release|x86.ActiveCfg = Release|Win32
+		{9BC98858-1B67-4848-A4D8-0C257FD35ED9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
