@@ -1,60 +1,130 @@
-#include <iostream>
-#include <SDL.h>
+#include "Button.hpp"
+#include "Game.hpp"
 
-using namespace std;
-
-bool XYInRect(const SDL_Rect& rect, int x, int y)
-{
-	return (true);
+Button::Button() {
+	x = 0;
+	y = 0;
+	scaleDimensions.Zero();
+	scale    = 0.f;
+	hasHover = false;
 }
 
-int main(int argc, char* argv[])
-{
-	bool running = true;
-	SDL_Event event;
-	Uint8 *keyStates = SDL_GetKeyState(0);
+Button::~Button() {
+    image.Release();
+}
 
-	SDL_Init(SDL_INIT_EVERYTHING);
+void Button::Load(int x, int y, const std::string& imageFile, float minScale, float maxScale, const std::string& buttonSound) {
+	this->x = x;
+	this->y = y;
+	image.Load(imageFile);
+	clipRect.Set(x, y, image.Width, image.Height);
+	scaleDimensions.x = minScale;
+	scaleDimensions.y = maxScale;
+	this->buttonSound = buttonSound;
+}
 
-	SDL_Surface *screen;
-	screen = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE);
+void Button::Update(float dt) {
+	float pdt = (float)dt / 1000.f;
 
-	SDL_Surface *encryptBMP;
-	encryptBMP = SDL_LoadBMP("Encrypt.bmp");
+	if (HasHover()) {
+		if (scale != scaleDimensions.y) {
+			scale += pdt;
 
-	Uint32 screenColor = SDL_MapRGB(screen->format, 25, 23, 90);
+			if (scale >= scaleDimensions.y)
+				scale = scaleDimensions.y;
 
-	SDL_Rect offset;
-	offset.x = 40;
-	offset.y = 40;
-
-	while (running)
-	{
-		while (SDL_PollEvent(&event))
-		{
-			switch (event.type)
-			{
-			case SDL_QUIT:
-				running = false;
-				break;
-			}
+			image.Scale(scale);
 		}
+	} else {
+		if (scale != scaleDimensions.x) {
+			scale -= pdt;
 
+			if (scale <= scaleDimensions.x)
+				scale = scaleDimensions.x;
 
-		if (event.type == SDL_MOUSEBUTTONDOWN) // if the user clicked a mousebutton
-		{
-			if (XYInRect(offset, event.motion.x, event.motion.y)) // so if the mouse-click is on the button
-			{
-				offset.x = 70;
-				offset.y = 70;
-			}
+			image.Scale(scale);
 		}
-
-		SDL_FillRect(screen, NULL, screenColor);
-		SDL_BlitSurface(encryptBMP, NULL, screen, &offset);
-		SDL_Flip(screen);
 	}
-	SDL_FreeSurface(screen);
-	SDL_FreeSurface(encryptBMP);
-	SDL_Quit();
+}
+
+void Button::Draw() {
+	image.Draw(x, y);
+}
+
+void Button::DrawClipped(int sx, int sy, int sw, int sh) {
+	image.DrawClipped(x, y, sx, sy, sw, sh);
+}
+
+void Button::SetPosition(int x, int y) {
+	this->x = x;
+	this->y = y;
+}
+
+void Button::SetClipRect(int sx, int sy, int sw, int sh) {
+	clipRect.X = sx;
+	clipRect.Y = sy;
+	clipRect.SetWidth(sw);
+	clipRect.SetHeight(sh);
+}
+
+void Button::SetClipRect(const Rect<int>& rect) {
+	SetClipRect(rect.X, rect.Y, rect.GetWidth(), rect.GetHeight());
+}
+
+void Button::Reset() {
+	scale    = scaleDimensions.x;
+	hasHover = false;
+    image.SetTint(Color::White);
+    image.Scale(scale);
+}
+
+int Button::GetX() const {
+	return x;
+}
+
+int Button::GetY() const {
+	return y;
+}
+
+int Button::GetWidth() const {
+	return image.Width;
+}
+
+int Button::GetHeight() const {
+	return image.Height;
+}
+
+float Button::GetScale() const {
+    return scale;
+}
+
+float Button::GetMinScale() const {
+    return scaleDimensions.x;
+}
+
+float Button::GetMaxScale() const {
+    return scaleDimensions.y;
+}
+
+Rect<int> Button::GetClipRect() const {
+	return clipRect;
+}
+
+bool Button::HasHover() const {
+	return hasHover;
+}
+
+void Button::OnMouseMove(int x, int y) {
+	if (x >= this->x && x <= this->x + clipRect.GetWidth() &&
+		y >= this->y && y <= this->y + clipRect.GetHeight()) {
+
+		if (!HasHover())
+			Game::audioManager.PlaySound(buttonSound, 0);
+
+		hasHover = true;
+		image.SetTint(Color::Red);
+	} else {
+		hasHover = false;
+		image.SetTint(Color::White);
+	}
 }
